@@ -93,7 +93,7 @@ function parseDialogueOrNull(line: string): Dialogue | null {
 
 ///////// Direction ///////////:
 
-class Direction {
+export class Direction {
     content: String
 
     constructor(content: string) {
@@ -104,8 +104,8 @@ class Direction {
         const p = document.createElement("p")
         p.classList.add("direction")
 
-        if (p.textContent) {
-            p.textContent += this.content
+        if (p) {
+            p.textContent += `${this.content}`
         }
         return p
     }
@@ -121,4 +121,20 @@ export const parseLine = (line: string): Dialogue | Direction => {
     } else {
         return new Direction(line)
     }
+}
+
+export type ScreenPlayElements = Dialogue | Direction
+
+export const parseText = (text: string): ScreenPlayElements[]  => {
+    const splitted: string[] = text.split('\n')
+
+    let result: ScreenPlayElements[] = []
+    
+    for (let i = 0; i < splitted.length; i++) {
+        const line = splitted[i] 
+        const parsed = parseLine(line)
+        result[i] = parsed
+    }
+
+    return result
 }
