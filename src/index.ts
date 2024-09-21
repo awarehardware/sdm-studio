@@ -3,6 +3,9 @@ import * as docx from "docx";
 
 import * as fs from "fs";
 import { Document, Packer, Paragraph, TextRun } from "docx";
+import { saveAs } from 'file-saver';
+
+
 
 /////
 
@@ -160,29 +163,32 @@ inputElement.addEventListener("input", (event) => {
     liveRendering(text)
 });
 
-// Documents contain sections, you can have multiple sections per document, go here to learn more about sections
-// This simple example will only contain one section
-const doc = new Document({
-    sections: [
-        {
-            properties: {},
-            children: [
-                new Paragraph({
-                    children: [
-                        new TextRun("Hello World"),
-                        new TextRun({
-                            text: "Foo Bar",
-                            bold: true,
-                        }),
-                        new TextRun({
-                            text: "\tGithub is the best",
-                            bold: true,
-                        }),
-                    ],
-                }),
-            ],
-        },
-    ],
-});
+async function generateDoc() {
 
-console.log(doc)
+    // Get the text from the input field
+    let inputText = "hello"
+
+    // Create a new Document with the input text
+    const doc = new Document({
+        sections: [
+            {
+                children: [
+                    new Paragraph({
+                        children: [
+                            new TextRun({
+                                text: inputText || "No input provided", // Default message if empty
+                                bold: true,
+                            }),
+                        ],
+                    }),
+                ],
+            },
+        ],
+    });
+
+    // Pack the document into a blob and trigger download
+    const blob = await Packer.toBlob(doc);
+    saveAs(blob, "generated_document.docx");
+}
+
+// generateDoc()
