@@ -56,23 +56,21 @@ export class Dialogue {
     return container;
   }
 
-  getRenderedDocxParagraph(): Paragraph {
-    return new Paragraph({
-      children: [
-        new TextRun({
-          text: this.character.toUpperCase(),
-          bold: true,
-          break: 1,
-        }),
-        new TextRun({
-          text: this.text,
-          bold: false,
-          break: 1,
-        }),
-      ],
-    alignment: AlignmentType.CENTER
-    },
-);
+  getRenderedDocxParagraph(): Array<Paragraph>  {
+    const result: Paragraph[] = []
+
+    let characterParagraph = new Paragraph({
+        text: this.character.toUpperCase(),
+        heading: HeadingLevel.HEADING_2,
+    })
+
+    let textParagraph = new Paragraph({
+        text: this.text,
+    })
+
+    result[0] = characterParagraph
+    result[1] = textParagraph
+    return result;
   }
 }
 
@@ -98,11 +96,11 @@ function parseDialogueOrNull(line: string): Dialogue | null {
   // Check if name matches with characters name
   for (let i = 0; i < CHARACTERS.length; i++) {
     // Look for character
-    let characterUpper = CHARACTERS[i].toUpperCase();
+    const characterUpper = CHARACTERS[i].toUpperCase();
 
     if (characterUpper.startsWith(characterName.toUpperCase())) {
       // Character found
-      let character = CHARACTERS[i];
+      const character = CHARACTERS[i];
       return new Dialogue(character, text, direction);
     }
   }
@@ -128,15 +126,15 @@ export class Direction {
     return p;
   }
 
-  getRenderedDocxParagraph(): Paragraph {
-    return new Paragraph({
+  getRenderedDocxParagraph(): Array<Paragraph> {
+    return [new Paragraph({
       children: [
         new TextRun({
           text: this.content,
           italics: true,
         }),
       ],
-    });
+    })]
   }
 }
 
@@ -157,7 +155,7 @@ const parseLine = (line: string): Dialogue | Direction => {
 export const parseText = (text: string): ScreenPlayElements[] => {
   const splitted: string[] = text.split("\n");
 
-  let result: ScreenPlayElements[] = [];
+  const result: ScreenPlayElements[] = [];
 
   for (let i = 0; i < splitted.length; i++) {
     const line = splitted[i];

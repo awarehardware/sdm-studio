@@ -1,4 +1,4 @@
-import { Document, Packer, Paragraph, TextRun } from "docx";
+import { Alignment, AlignmentType, Document, Packer, Paragraph, TextRun, UnderlineType } from "docx";
 import { saveAs } from "file-saver";
 import { parseText, ScreenPlayElements, Direction, Dialogue } from "./parser";
 
@@ -54,26 +54,56 @@ inputElement.addEventListener("input", (event) => {
 
 async function generateDoc() {
   // Get the text from the input field
-  let inputText = "hello";
-
-  let section_children = [];
-
-  let elements = parseUserInput();
+  const section_children = [];
+  const elements = parseUserInput();
 
   for (let i = 0; i < elements.length; i++) {
-    section_children[i] = elements[i].getRenderedDocxParagraph();
+    section_children.push(...elements[i].getRenderedDocxParagraph());
   }
 
-  // Create a new Document with the input text
+  // The first argument is an ID you use to apply the style to paragraphs
+  // The second argument is a human-friendly name to show in the UI
   let doc = new Document({
-    sections: [
-      {
-        children: section_children,
-      },
-    ],
+    creator: "Clippy",
+    title: "Sample Document",
+    description: "A brief example of using docx",
+    sections: [{
+      children: section_children
+    }],
+    styles: {
+      paragraphStyles: [
+        {
+          id: "Heading 2",
+          name: "Heading 2",
+          basedOn: "Normal",
+          next: "Normal",
+          quickFormat: true,
+          run: {
+            bold: true,
+            size: 26, 
+            font: "Times New Roman"
+          },
+          paragraph: {
+            alignment: AlignmentType.CENTER
+          },
+        },
+        {
+          id: "Normal",
+          name: "Normal",
+          basedOn: "Normal",
+          next: "Normal",
+          quickFormat: true,
+          run: {
+            bold: false,
+            size: 26, 
+            font: "Times New Roman"
+          },
+          paragraph: {
+          },
+        },
+      ],
+    },
   });
-
-  console.log(doc);
 
   // Pack the document into a blob and trigger download
   const blob = await Packer.toBlob(doc);
