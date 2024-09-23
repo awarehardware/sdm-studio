@@ -59,11 +59,32 @@ export class Dialogue {
   getRenderedDocxParagraph(): Array<Paragraph>  {
     const result: Paragraph[] = []
 
+    // Paragraph with character and potential direction
     let characterParagraph = new Paragraph({
-        text: this.character.toUpperCase(),
-        heading: HeadingLevel.HEADING_2,
+       children: [
+        new TextRun(
+          {
+            text: this.character.toUpperCase(),
+            break: 1
+          },
+        ),
+       ],
+       heading: HeadingLevel.HEADING_2
     })
 
+    // Add direction
+    if (this.direction) {
+      characterParagraph.addChildElement(new TextRun(
+        {
+          text: ", ".concat(this.direction),
+          style: "Normal",
+          italics: true,
+          bold: false
+        }
+      ))
+    }
+
+    // Paragraph with text
     let textParagraph = new Paragraph({
         text: this.text,
     })
@@ -132,6 +153,7 @@ export class Direction {
         new TextRun({
           text: this.content,
           italics: true,
+          break: 1
         }),
       ],
     })]
