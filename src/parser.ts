@@ -2,7 +2,19 @@ import { Alignment, AlignmentType, HeadingLevel, Paragraph, TextRun } from "docx
 
 /////
 
-const CHARACTERS: string[] = ["EMMA", "FABIEN"];
+const CHARACTERS: string[] = [
+  "EMMA",
+  "FABIEN",
+  "LILIANE",
+  "JOSE",
+  "RAYMOND",
+  "CAMILLE",
+  "PHILIPPE",
+  "LEO",
+  "LESLIE",
+  "AUDREY",
+  "SOFIANE"
+];
 
 //////// Dialogue ////////
 
