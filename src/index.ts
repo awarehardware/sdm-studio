@@ -6,22 +6,6 @@ import './styles.css';
 
 //////
 
-const container = document.querySelector('.container') as HTMLDivElement
-
-function adjustContainerHeight() {
-  // Get the visible height (without the keyboard)
-  const visibleHeight = window.innerHeight;
-  
-  // Set the container height to the visible height
-  container.style.height = `${visibleHeight}px`;
-}
-
-// Listen for resize events (which happens when the keyboard opens or closes)
-window.addEventListener('resize', adjustContainerHeight);
-
-// Call this function on load to set the initial height
-window.addEventListener('load', adjustContainerHeight);
-
 // Your TypeScript code
 
 const parseUserInput = (): ScreenPlayElements[] => {
