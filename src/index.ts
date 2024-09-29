@@ -75,22 +75,18 @@ async function generateDoc() {
     styles: {
         paragraphStyles: [
             {
-                id: "myWonkyStyle",
-                name: "My Wonky Style",
+                id: "character",
+                name: "character",
                 basedOn: "Normal",
                 next: "Normal",
                 quickFormat: true,
                 run: {
-                    italics: true,
-                    color: "999999",
+                    bold: true,
+                    font: "Times New Roman",
+                    size: "26pt"
                 },
                 paragraph: {
-                    spacing: {
-                        line: 276,
-                    },
-                    indent: {
-                        left: 720,
-                    },
+                    alignment: AlignmentType.CENTER,
                 }}]
             },
  });

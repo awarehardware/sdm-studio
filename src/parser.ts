@@ -78,11 +78,11 @@ export class Dialogue {
           {
             text: this.character.toUpperCase(),
             break: 1,
-            style: "myWonkyStyle"
           },
         ),
        ],
-       alignment: AlignmentType.CENTER,
+
+        style: "character"
     })
 
     // Add direction
