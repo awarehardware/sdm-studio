@@ -19,23 +19,15 @@ const parseUserInput = (): ScreenPlayElements[] => {
 };
 
 const liveRendering = () => {
-    // Get the input element by its ID
-    const inputElement = document.getElementById(
-      "userInput"
-    ) as HTMLTextAreaElement;
-
-    const text = inputElement.value
-
-
     // Get the preview text area
-  const testElement = document.getElementById("test");
+  const liveRenderDivElement = document.getElementById("liveRenderDiv");
 
-  if (testElement == null) {
+  if (liveRenderDivElement == null) {
     return;
   }
 
   // Create a new paragraph element with text content
-  testElement.innerHTML = "";
+  liveRenderDivElement.innerHTML = "";
 
   // Parse text from userInput
   const elements = parseUserInput();
@@ -43,7 +35,7 @@ const liveRendering = () => {
   // Append the paragraph to the div
   for (let i = 0; i < elements?.length; i++) {
     const element = elements[i];
-    testElement.appendChild(element.getRenderedHtml());
+    liveRenderDivElement.appendChild(element.getRenderedHtml());
   }
 };
 
