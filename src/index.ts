@@ -2,6 +2,9 @@ import { Alignment, AlignmentType, Document, Packer, Paragraph, TextRun, Underli
 import { saveAs } from "file-saver";
 import { parseText, ScreenPlayElements, Direction, Dialogue } from "./parser";
 import { loadSavedInput, saveInputOnChange } from "./autosaver"
+import './styles.css';
+
+// Your TypeScript code
 
 const parseUserInput = (): ScreenPlayElements[] => {
   const userInput = document.getElementById("userInput") as HTMLTextAreaElement;
