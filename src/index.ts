@@ -88,7 +88,7 @@ async function generateDoc() {
                     run: {
                         bold: true,
                         font: "Times New Roman",
-                        size: "26pt"
+                        size: 26
                     },
                     paragraph: {
                         alignment: AlignmentType.CENTER,
@@ -103,7 +103,7 @@ async function generateDoc() {
                     run: {
                         bold: false,
                         font: "Times New Roman",
-                        size: "26pt"
+                        size: 26
                     },
                     paragraph: {
                         alignment: AlignmentType.LEFT,
@@ -119,7 +119,7 @@ async function generateDoc() {
                         bold: false,
                         italics: true,
                         font: "Times New Roman",
-                        size: "26pt"
+                        size: 26 
                     },
                     paragraph: {
                     }
