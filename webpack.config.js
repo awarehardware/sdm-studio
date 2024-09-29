@@ -1,9 +1,10 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
   mode: 'development',
-  entry: './src/index.ts',
+  entry: './src/index.ts', // Assuming your main TS file is here
   devtool: 'inline-source-map',
   module: {
     rules: [
@@ -11,6 +12,10 @@ module.exports = {
         test: /\.ts$/,
         use: 'ts-loader',
         exclude: /node_modules/,
+      },
+      {
+        test: /\.css$/,
+        use: [MiniCssExtractPlugin.loader, 'css-loader'], // Use MiniCssExtractPlugin.loader
       },
     ],
   },
@@ -20,13 +25,14 @@ module.exports = {
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
-    publicPath: '',  // Use relative paths for GitHub Pages
     clean: true,
-  
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './src/index.html',
+      template: './src/index.html', // Adjust path based on your project
+    }),
+    new MiniCssExtractPlugin({
+      filename: 'styles.css', // Output CSS filename
     }),
   ],
 };
