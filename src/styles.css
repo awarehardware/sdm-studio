@@ -34,6 +34,7 @@ html, body {
   height: 100vh; /* 100% of the viewport height */
   padding: 10px;
   box-sizing: border-box;
+  transition: height 0.3s ease-in-out; /* Smooth transition when resizing */
 }
 
 /* Textarea styling */
