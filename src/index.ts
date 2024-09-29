@@ -87,8 +87,42 @@ async function generateDoc() {
                 },
                 paragraph: {
                     alignment: AlignmentType.CENTER,
-                }}]
+                }
             },
+            {
+                id: "text",
+                name: "text",
+                basedOn: "Normal",
+                next: "Normal",
+                quickFormat: true,
+                run: {
+                    bold: false,
+                    font: "Times New Roman",
+                    size: "26pt"
+                },
+                paragraph: {
+                    alignment: AlignmentType.LEFT,
+                }
+            },
+           {
+                    id: "direction",
+                    name: "direction",
+                    basedOn: "Normal",
+                    next: "Normal",
+                    quickFormat: true,
+                    run: {
+                        bold: false,
+                        italics: true,
+                        font: "Times New Roman",
+                        size: "26pt"
+                    },
+                    paragraph: {
+                    }
+                }
+          
+        ]
+    },
+
  });
 
   // Pack the document into a blob and trigger download
