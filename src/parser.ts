@@ -3,181 +3,181 @@ import { Alignment, AlignmentType, HeadingLevel, Paragraph, TextRun } from "docx
 /////
 
 const CHARACTERS: string[] = [
-  "EMMA",
-  "FABIEN",
-  "LILIANE",
-  "JOSE",
-  "RAYMOND",
-  "CAMILLE",
-  "PHILIPPE",
-  "LEO",
-  "LESLIE",
-  "AUDREY",
-  "SOFIANE"
+    "EMMA",
+    "FABIEN",
+    "LILIANE",
+    "JOSE",
+    "RAYMOND",
+    "CAMILLE",
+    "PHILIPPE",
+    "LEO",
+    "LESLIE",
+    "AUDREY",
+    "SOFIANE"
 ];
 
 //////// Dialogue ////////
 
 export class Dialogue {
-  character: string;
-  text: string;
-  direction: string | null;
+    character: string;
+    text: string;
+    direction: string | null;
 
-  constructor(character: string, text: string, direction: string) {
-    this.character = character;
-    this.text = text;
-    this.direction = direction;
-  }
-
-  getRenderedHtml(): HTMLElement {
-    // Create the main div container
-    const container = document.createElement("div");
-
-    // Create and append the line containing both character and direction
-    const characterDirectionLine = document.createElement("p");
-
-    // Create a bold element for the character
-    const characterElement = document.createElement("strong");
-    characterElement.textContent = `${this.character}`;
-
-    // Append the character element to the line
-    characterDirectionLine.appendChild(characterElement);
-    characterDirectionLine.classList.add("character-direction");
-
-    // If direction exists, add it in italics
-    if (this.direction) {
-      const space = document.createTextNode(", "); // Add comma and space
-      characterDirectionLine.appendChild(space);
-
-      const directionElement = document.createElement("em");
-      directionElement.textContent = this.direction;
-      characterDirectionLine.appendChild(directionElement);
+    constructor(character: string, text: string, direction: string) {
+        this.character = character;
+        this.text = text;
+        this.direction = direction;
     }
 
-    // Add the character and direction line to the container
-    container.appendChild(characterDirectionLine);
+    getRenderedHtml(): HTMLElement {
+        // Create the main div container
+        const container = document.createElement("div");
 
-    // Create and append the text element for the dialogue
-    const textElement = document.createElement("p");
-    textElement.textContent = this.text;
-    textElement.classList.add("dialogue-text");
+        // Create and append the line containing both character and direction
+        const characterDirectionLine = document.createElement("p");
 
-    // Append the dialogue text below the character and direction line
-    container.appendChild(textElement);
+        // Create a bold element for the character
+        const characterElement = document.createElement("strong");
+        characterElement.textContent = `${this.character}`;
 
-    return container;
-  }
+        // Append the character element to the line
+        characterDirectionLine.appendChild(characterElement);
+        characterDirectionLine.classList.add("character-direction");
 
-  getRenderedDocxParagraph(): Array<Paragraph>  {
-    const result: Paragraph[] = []
+        // If direction exists, add it in italics
+        if (this.direction) {
+            const space = document.createTextNode(", "); // Add comma and space
+            characterDirectionLine.appendChild(space);
 
-    // Paragraph with character and potential direction
-    let characterParagraph = new Paragraph({
-       children: [
-        new TextRun(
-          {
-            text: this.character.toUpperCase(),
-            break: 1,
-          },
-        ),
-       ],
-
-        style: "character"
-    })
-
-    // Add direction
-    if (this.direction) {
-      characterParagraph.addChildElement(new TextRun(
-        {
-          text: ", ".concat(this.direction),
-          italics: true,
-          bold: false
+            const directionElement = document.createElement("em");
+            directionElement.textContent = this.direction;
+            characterDirectionLine.appendChild(directionElement);
         }
-      ))
+
+        // Add the character and direction line to the container
+        container.appendChild(characterDirectionLine);
+
+        // Create and append the text element for the dialogue
+        const textElement = document.createElement("p");
+        textElement.textContent = this.text;
+        textElement.classList.add("dialogue-text");
+
+        // Append the dialogue text below the character and direction line
+        container.appendChild(textElement);
+
+        return container;
     }
 
-    // Paragraph with text
-    let textParagraph = new Paragraph({
-        style: "text"
-    })
+    getRenderedDocxParagraph(): Array<Paragraph> {
+        const result: Paragraph[] = []
 
-    textParagraph.addChildElement(
-        new TextRun (
-            {
-                text: this.text,
-            }
+        // Paragraph with character and potential direction
+        let characterParagraph = new Paragraph({
+            children: [
+                new TextRun(
+                    {
+                        text: this.character.toUpperCase(),
+                        break: 1,
+                    },
+                ),
+            ],
+
+            style: "character"
+        })
+
+        // Add direction
+        if (this.direction) {
+            characterParagraph.addChildElement(new TextRun(
+                {
+                    text: ", ".concat(this.direction),
+                    italics: true,
+                    bold: false
+                }
+            ))
+        }
+
+        // Paragraph with text
+        let textParagraph = new Paragraph({
+            style: "text"
+        })
+
+        textParagraph.addChildElement(
+            new TextRun(
+                {
+                    text: this.text,
+                }
+            )
         )
-    )
-    result[0] = characterParagraph
-    result[1] = textParagraph
-    return result;
-  }
+        result[0] = characterParagraph
+        result[1] = textParagraph
+        return result;
+    }
 }
 
 function parseDialogueOrNull(line: string): Dialogue | null {
-  // Magic regex
-  const regex =
-    /^(\w+)\s*(?:[, ]\s*(?:\(([^)]+)\)|([a-zA-Zéèêà' ]+)))?\s*:\s*(.+)$/;
-  const match = line.match(regex);
+    // Magic regex
+    const regex =
+        /^(\w+)\s*(?:[, ]\s*(?:\(([^)]+)\)|([a-zA-Zéèêà' ]+)))?\s*:\s*(.+)$/;
+    const match = line.match(regex);
 
-  let characterName: string; // The char
-  let direction: string; // The optional direction (empty if not present)
-  let text: string; // The spoken text
+    let characterName: string; // The char
+    let direction: string; // The optional direction (empty if not present)
+    let text: string; // The spoken text
 
-  if (match) {
-    characterName = match[1]; // The character name
-    direction = match[2] || match[3] || ""; // The optional direction (either in parentheses or not)
-    text = match[4]; // The spoken text
-  } else {
-    // No match with regex
-    return null;
-  }
-
-  // Check if name matches with characters name
-  for (let i = 0; i < CHARACTERS.length; i++) {
-    // Look for character
-    const characterUpper = CHARACTERS[i].toUpperCase();
-
-    if (characterUpper.startsWith(characterName.toUpperCase())) {
-      // Character found
-      const character = CHARACTERS[i];
-      return new Dialogue(character, text, direction);
+    if (match) {
+        characterName = match[1]; // The character name
+        direction = match[2] || match[3] || ""; // The optional direction (either in parentheses or not)
+        text = match[4]; // The spoken text
+    } else {
+        // No match with regex
+        return null;
     }
-  }
-  return null;
+
+    // Check if name matches with characters name
+    for (let i = 0; i < CHARACTERS.length; i++) {
+        // Look for character
+        const characterUpper = CHARACTERS[i].toUpperCase();
+
+        if (characterUpper.startsWith(characterName.toUpperCase())) {
+            // Character found
+            const character = CHARACTERS[i];
+            return new Dialogue(character, text, direction);
+        }
+    }
+    return null;
 }
 
 ///////// Direction ///////////:
 
 export class Direction {
-  content: string;
+    content: string;
 
-  constructor(content: string) {
-    this.content = content;
-  }
-
-  getRenderedHtml(): HTMLElement {
-    const p = document.createElement("p");
-    p.classList.add("direction");
-
-    if (p) {
-      p.textContent += `${this.content}`;
+    constructor(content: string) {
+        this.content = content;
     }
-    return p;
-  }
 
-  getRenderedDocxParagraph(): Array<Paragraph> {
-    return [
-        new Paragraph({
-          children: [
-            new TextRun({
-              text: this.content,
-              break: 1
-            }),
-          ],
-          style: "direction"
-    })]
-  }
+    getRenderedHtml(): HTMLElement {
+        const p = document.createElement("p");
+        p.classList.add("direction");
+
+        if (p) {
+            p.textContent += `${this.content}`;
+        }
+        return p;
+    }
+
+    getRenderedDocxParagraph(): Array<Paragraph> {
+        return [
+            new Paragraph({
+                children: [
+                    new TextRun({
+                        text: this.content,
+                        break: 1
+                    }),
+                ],
+                style: "direction"
+            })]
+    }
 }
 
 ////////// Line parser
@@ -185,25 +185,25 @@ export class Direction {
 export type ScreenPlayElements = Dialogue | Direction;
 
 const parseLine = (line: string): Dialogue | Direction => {
-  const dial = parseDialogueOrNull(line);
+    const dial = parseDialogueOrNull(line);
 
-  if (dial) {
-    return dial;
-  } else {
-    return new Direction(line);
-  }
+    if (dial) {
+        return dial;
+    } else {
+        return new Direction(line);
+    }
 };
 
 export const parseText = (text: string): ScreenPlayElements[] => {
-  const splitted: string[] = text.split("\n");
+    const splitted: string[] = text.split("\n");
 
-  const result: ScreenPlayElements[] = [];
+    const result: ScreenPlayElements[] = [];
 
-  for (let i = 0; i < splitted.length; i++) {
-    const line = splitted[i];
-    const parsed = parseLine(line);
-    result[i] = parsed;
-  }
+    for (let i = 0; i < splitted.length; i++) {
+        const line = splitted[i];
+        const parsed = parseLine(line);
+        result[i] = parsed;
+    }
 
-  return result;
+    return result;
 };
