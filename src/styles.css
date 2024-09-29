@@ -1,18 +1,11 @@
-/* Make the textarea larger */
-textarea {
-    width: 500px;
-    height: 200px;
-    font-size: 16px;
-    padding: 10px;
-}
-
 h2 {
     text-align: center;
     color: #333;
 } 
 
+
 .dialogue-text {
-    text-align: center;
+    text-align: left;
 }
 
 .character-direction {
@@ -22,4 +15,57 @@ h2 {
 .direction {
     text-align: left;
     font-style: italic;
+}
+
+
+/* Ensure the page scales to fit the screen size */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Arial, sans-serif;
+}
+
+/* Responsive container */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh; /* 100% of the viewport height */
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+/* Textarea styling */
+#userInput {
+  width: 100%;  /* Full width of the container */
+  height: 40%;  /* Adjust the height, you can modify this percentage */
+  resize: none; /* Prevent resizing */
+  padding: 10px;
+  font-size: 16px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Div for live render */
+#liveRenderDiv {
+  width: 60%;  /* Full width */
+  height: 55%;  /* Adjust the height */
+  margin-top: 10px;
+  padding: 10px;
+  box-sizing: border-box;
+  background-color: #f9f9f9;
+  overflow: auto;  /* In case content overflows */
+  align: center;
+}
+
+/* Media query for mobile */
+@media only screen and (max-width: 768px) {
+  #userInput {
+    font-size: 14px; /* Adjust the font size for smaller screens */
+  }
+  #liveRender {
+    font-size: 14px; /* Adjust font size in the div */
+  }
 }
