@@ -14,7 +14,16 @@ const parseUserInput = (): ScreenPlayElements[] => {
   }
 };
 
-const liveRendering = (text: string) => {
+const liveRendering = () => {
+    // Get the input element by its ID
+    const inputElement = document.getElementById(
+      "userInput"
+    ) as HTMLTextAreaElement;
+
+    const text = inputElement.value
+
+
+    // Get the preview text area
   const testElement = document.getElementById("test");
 
   if (testElement == null) {
@@ -45,9 +54,7 @@ const inputElement = document.getElementById(
 
 // Add an event listener to capture the input change event
 inputElement.addEventListener("input", (event) => {
-  const target = event.target as HTMLInputElement;
-  const text = target.value;
-  liveRendering(text);
+  liveRendering();
 });
 
 ///
@@ -191,4 +198,5 @@ function saveInputOnChange(): void {
 window.onload = function (): void {
   loadSavedInput(); // Load saved input from cookies
   saveInputOnChange(); // Attach input event listener to save input on change
+    liveRendering();
 };
