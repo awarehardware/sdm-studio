@@ -98,9 +98,16 @@ export class Dialogue {
 
     // Paragraph with text
     let textParagraph = new Paragraph({
-        text: this.text,
+        style: "text"
     })
 
+    textParagraph.addChildElement(
+        new TextRun (
+            {
+                text: this.text,
+            }
+        )
+    )
     result[0] = characterParagraph
     result[1] = textParagraph
     return result;
@@ -160,14 +167,15 @@ export class Direction {
   }
 
   getRenderedDocxParagraph(): Array<Paragraph> {
-    return [new Paragraph({
-      children: [
-        new TextRun({
-          text: this.content,
-          italics: true,
-          break: 1
-        }),
-      ],
+    return [
+        new Paragraph({
+          children: [
+            new TextRun({
+              text: this.content,
+              break: 1
+            }),
+          ],
+          style: "direction"
     })]
   }
 }
