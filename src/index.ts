@@ -2,7 +2,7 @@ import { AlignmentType, Document, Packer } from "docx";
 import { saveAs } from "file-saver";
 import { parseText } from "./parser";
 import { loadSavedInput, saveInputOnChange } from "./autosaver"
-import { ScreenPlayElements } from "./screenplay"
+import { ScreenPlay } from "./screenplay"
 
 import './styles.css';
 
@@ -10,13 +10,13 @@ import './styles.css';
 
 // Your TypeScript code
 
-const parseUserInput = (): ScreenPlayElements[] => {
+const parseUserInput = (): ScreenPlay => {
     const userInput = document.getElementById("userInput") as HTMLTextAreaElement;
     // Parse text
     if (userInput.value) {
         return parseText(userInput.value);
     } else {
-        return [];
+        return parseText("")
     }
 };
 
@@ -32,11 +32,14 @@ const liveRendering = () => {
     liveRenderDivElement.innerHTML = "";
 
     // Parse text from userInput
-    const elements = parseUserInput();
+    const screenplay = parseUserInput();
+
+    // Append title
+    liveRenderDivElement.appendChild(screenplay.title.getRenderedHtml())
 
     // Append the paragraph to the div
-    for (let i = 0; i < elements?.length; i++) {
-        const element = elements[i];
+    for (let i = 0; i < screenplay.elements?.length; i++) {
+        const element = screenplay.elements[i];
         liveRenderDivElement.appendChild(element.getRenderedHtml());
     }
 };
@@ -51,7 +54,7 @@ const inputElement = document.getElementById(
 ) as HTMLTextAreaElement;
 
 // Add an event listener to capture the input change event
-inputElement.addEventListener("input", (event) => {
+inputElement.addEventListener("input", (_) => {
     liveRendering();
 });
 
@@ -60,10 +63,14 @@ inputElement.addEventListener("input", (event) => {
 async function generateDoc() {
     // Get the text from the input field
     const section_children = [];
-    const elements = parseUserInput();
+    const screenplay = parseUserInput();
 
-    for (let i = 0; i < elements.length; i++) {
-        section_children.push(...elements[i].getRenderedDocxParagraph());
+    // Render title
+    section_children.push(...screenplay.title.getRenderedDocxParagraph());
+    
+    // Render screenplay elements
+    for (let i = 0; i < screenplay.elements.length; i++) {
+        section_children.push(...screenplay.elements[i].getRenderedDocxParagraph());
     }
 
     // The first argument is an ID you use to apply the style to paragraphs
@@ -92,6 +99,21 @@ async function generateDoc() {
                     },
                     paragraph: {
                         alignment: AlignmentType.CENTER,
+                    }
+                },
+                {
+                    id: "title",
+                    name: "title",
+                    basedOn: "Normal",
+                    next: "Normal",
+                    quickFormat: true,
+                    run: {
+                        bold: true,
+                        font: "Times New Roman",
+                        size: 26
+                    },
+                    paragraph: {
+                        alignment: AlignmentType.LEFT,
                     }
                 },
                 {

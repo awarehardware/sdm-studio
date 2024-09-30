@@ -10,12 +10,12 @@ export class Title {
     }
 
     private asString(): string {
-        return `${this.coupleLetter} - ${this.title}`
+        return `${this.coupleLetter.toUpperCase()} - ${this.title.toUpperCase()}`
     }
 
     getRenderedHtml(): HTMLElement {
-        const p = document.createElement("p");
-        p.classList.add("direction");
+        const p = document.createElement("strong");
+        p.classList.add("title");
 
         if (p) {
             p.textContent += this.asString()
@@ -29,10 +29,9 @@ export class Title {
                 children: [
                     new TextRun({
                         text: this.asString(),
-                        break: 1
                     }),
                 ],
-                style: "direction"
+                style: "title"
             })]
     }
 }

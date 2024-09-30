@@ -1,7 +1,7 @@
 import { Dialogue } from "./dialogue"
 import { Direction } from "./direction"
 import { Title } from "./title"
-import { ScreenPlayElements } from "./screenplay"
+import { ScreenPlay } from "./screenplay"
 
 /////
 
@@ -85,16 +85,35 @@ const parseLine = (line: string): Dialogue | Direction => {
     }
 };
 
-export const parseText = (text: string): ScreenPlayElements[] => {
+export const parseText = (text: string): ScreenPlay => {
     // Divide input text in lines
     const splitted: string[] = text.split("\n");
 
-    const result: ScreenPlayElements[] = [];
+    const result = new ScreenPlay()
+
+    let titleFound = false
+    let firstElementFound = false
+    let indexElement = 0;
 
     for (let i = 0; i < splitted.length; i++) {
         const line = splitted[i];
+        
+        if (!indexElement) {
+            // First try to find title
+            const potentialTitle = parseTitleOrNull(line)
+            
+            // Title found
+            if(potentialTitle) {
+                titleFound = true;
+                result.title = potentialTitle;
+                continue
+            }
+        }
+
         const parsed = parseLine(line);
-        result[i] = parsed;
+        firstElementFound = true;
+        result.elements[indexElement] = parsed;
+        indexElement++;
     }
 
     return result;
