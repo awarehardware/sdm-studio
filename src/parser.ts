@@ -1,7 +1,7 @@
-import { Alignment, AlignmentType, HeadingLevel, Paragraph, TextRun } from "docx";
-
 import { Dialogue } from "./dialogue"
 import { Direction } from "./direction"
+import { Title } from "./title"
+
 /////
 
 const CHARACTERS: string[] = [
@@ -49,6 +49,27 @@ function parseDialogueOrNull(line: string): Dialogue | null {
         }
     }
     return null;
+}
+
+////////// Title
+
+function parseTitleOrNull(line: string): Title | null {
+    // Define the regular expression with capturing groups
+    const regex = /^([A-Za-z])\s*-\s*(.*)$/;
+
+    // Use match() to apply the regex
+    const matches = line.match(regex);
+
+    if (matches) {
+        // The first letter will be in the first capturing group
+        const firstLetter = matches[1];
+
+        // The text after the hyphen will be in the second capturing group
+        const textAfterHyphen = matches[2];
+        return new Title(firstLetter, textAfterHyphen);
+    }
+
+    return null
 }
 
 ////////// Line parser
