@@ -115,6 +115,13 @@ html, body {
         font-size: 8pt;
     }
 
+    .title {
+        text-align: left;
+        bold: true;
+        font: "Times New Roman";
+        font-size: 8pt;
+    }
+
     .direction {
         text-align: left;
         font-style: italic;
