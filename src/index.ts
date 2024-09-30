@@ -1,7 +1,10 @@
 import { Alignment, AlignmentType, Document, Packer, Paragraph, TextRun, UnderlineType } from "docx";
 import { saveAs } from "file-saver";
-import { parseText, ScreenPlayElements, Direction, Dialogue } from "./parser";
+import { parseText, ScreenPlayElements   } from "./parser";
 import { loadSavedInput, saveInputOnChange } from "./autosaver"
+import { Dialogue } from "./dialogue"
+import { Direction } from "./direction"
+
 import './styles.css';
 
 //////
