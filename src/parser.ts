@@ -1,6 +1,7 @@
 import { Dialogue } from "./dialogue"
 import { Direction } from "./direction"
 import { Title } from "./title"
+import { ScreenPlayElements } from "./screenplay"
 
 /////
 
@@ -74,8 +75,6 @@ function parseTitleOrNull(line: string): Title | null {
 
 ////////// Line parser
 
-export type ScreenPlayElements = Dialogue | Direction;
-
 const parseLine = (line: string): Dialogue | Direction => {
     const dial = parseDialogueOrNull(line);
 
@@ -87,6 +86,7 @@ const parseLine = (line: string): Dialogue | Direction => {
 };
 
 export const parseText = (text: string): ScreenPlayElements[] => {
+    // Divide input text in lines
     const splitted: string[] = text.split("\n");
 
     const result: ScreenPlayElements[] = [];

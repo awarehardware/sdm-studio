@@ -1,9 +1,8 @@
-import { Alignment, AlignmentType, Document, Packer, Paragraph, TextRun, UnderlineType } from "docx";
+import { AlignmentType, Document, Packer } from "docx";
 import { saveAs } from "file-saver";
-import { parseText, ScreenPlayElements   } from "./parser";
+import { parseText } from "./parser";
 import { loadSavedInput, saveInputOnChange } from "./autosaver"
-import { Dialogue } from "./dialogue"
-import { Direction } from "./direction"
+import { ScreenPlayElements } from "./screenplay"
 
 import './styles.css';
 
@@ -122,7 +121,7 @@ async function generateDoc() {
                         bold: false,
                         italics: true,
                         font: "Times New Roman",
-                        size: 26 
+                        size: 26
                     },
                     paragraph: {
                     }
