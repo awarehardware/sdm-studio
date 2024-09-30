@@ -12,10 +12,8 @@ import './styles.css';
 
 const parseUserInput = (): ScreenPlayElements[] => {
     const userInput = document.getElementById("userInput") as HTMLTextAreaElement;
-    console.log(userInput);
     // Parse text
     if (userInput.value) {
-        console.log(userInput.value);
         return parseText(userInput.value);
     } else {
         return [];
@@ -140,7 +138,6 @@ async function generateDoc() {
 ///// Plug download button
 
 const downloadButtonCallback = () => {
-    console.log("hello");
     generateDoc();
 };
 
