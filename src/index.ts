@@ -73,12 +73,14 @@ async function generateDoc() {
         section_children.push(...screenplay.elements[i].getRenderedDocxParagraph());
     }
 
+    const docTitle = screenplay.title.asString();
+
     // The first argument is an ID you use to apply the style to paragraphs
     // The second argument is a human-friendly name to show in the UI
     let doc = new Document({
-        creator: "Clippy",
-        title: "Sample Document",
-        description: "A brief example of using docx",
+        creator: "",
+        title: docTitle,
+        description: "",
         sections: [{
             children: section_children
         }],
@@ -154,7 +156,7 @@ async function generateDoc() {
 
     // Pack the document into a blob and trigger download
     const blob = await Packer.toBlob(doc);
-    saveAs(blob, "generated_document.docx");
+    saveAs(blob, `${docTitle}.docx`);
 }
 
 ///// Plug download button
