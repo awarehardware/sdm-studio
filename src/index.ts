@@ -1,14 +1,8 @@
-import { AlignmentType, Document, Packer } from "docx";
-import { saveAs } from "file-saver";
 import { parseText } from "./parser";
 import { loadSavedInput, saveInputOnChange } from "./autosaver"
 import { ScreenPlay } from "./screenplay"
-
+import { generateDoc } from "./docGenerator"
 import './styles.css';
-
-//////
-
-// Your TypeScript code
 
 const parseUserInput = (): ScreenPlay => {
     const userInput = document.getElementById("userInput") as HTMLTextAreaElement;
@@ -34,6 +28,9 @@ const liveRendering = () => {
     // Parse text from userInput
     const screenplay = parseUserInput();
 
+    // Set window title with screenplay title
+    document.title = screenplay.title.asString()
+
     // Append title
     liveRenderDivElement.appendChild(screenplay.title.getRenderedHtml())
 
@@ -43,8 +40,6 @@ const liveRendering = () => {
         liveRenderDivElement.appendChild(element.getRenderedHtml());
     }
 };
-
-////////
 
 ///// Plug live rendering on user input
 
@@ -58,111 +53,12 @@ inputElement.addEventListener("input", (_) => {
     liveRendering();
 });
 
-///
-
-async function generateDoc() {
-    // Get the text from the input field
-    const section_children = [];
-    const screenplay = parseUserInput();
-
-    // Render title
-    section_children.push(...screenplay.title.getRenderedDocxParagraph());
-    
-    // Render screenplay elements
-    for (let i = 0; i < screenplay.elements.length; i++) {
-        section_children.push(...screenplay.elements[i].getRenderedDocxParagraph());
-    }
-
-    const docTitle = screenplay.title.asString();
-
-    // The first argument is an ID you use to apply the style to paragraphs
-    // The second argument is a human-friendly name to show in the UI
-    let doc = new Document({
-        creator: "",
-        title: docTitle,
-        description: "",
-        sections: [{
-            children: section_children
-        }],
-
-
-        styles: {
-            paragraphStyles: [
-                {
-                    id: "character",
-                    name: "character",
-                    basedOn: "Normal",
-                    next: "Normal",
-                    quickFormat: true,
-                    run: {
-                        bold: true,
-                        font: "Times New Roman",
-                        size: 26
-                    },
-                    paragraph: {
-                        alignment: AlignmentType.CENTER,
-                    }
-                },
-                {
-                    id: "title",
-                    name: "title",
-                    basedOn: "Normal",
-                    next: "Normal",
-                    quickFormat: true,
-                    run: {
-                        bold: true,
-                        font: "Times New Roman",
-                        size: 26
-                    },
-                    paragraph: {
-                        alignment: AlignmentType.LEFT,
-                    }
-                },
-                {
-                    id: "text",
-                    name: "text",
-                    basedOn: "Normal",
-                    next: "Normal",
-                    quickFormat: true,
-                    run: {
-                        bold: false,
-                        font: "Times New Roman",
-                        size: 26
-                    },
-                    paragraph: {
-                        alignment: AlignmentType.LEFT,
-                    }
-                },
-                {
-                    id: "direction",
-                    name: "direction",
-                    basedOn: "Normal",
-                    next: "Normal",
-                    quickFormat: true,
-                    run: {
-                        bold: false,
-                        italics: true,
-                        font: "Times New Roman",
-                        size: 26
-                    },
-                    paragraph: {
-                    }
-                }
-
-            ]
-        },
-
-    });
-
-    // Pack the document into a blob and trigger download
-    const blob = await Packer.toBlob(doc);
-    saveAs(blob, `${docTitle}.docx`);
-}
 
 ///// Plug download button
 
 const downloadButtonCallback = () => {
-    generateDoc();
+    let screenplay = parseUserInput()
+    generateDoc(screenplay);
 };
 
 const downloadButton = document.getElementById(
