@@ -9,7 +9,7 @@ export class Title {
         this.title = title;
     }
 
-    private asString(): string {
+    asString(): string {
         return `${this.coupleLetter.toUpperCase()} - ${this.title.toUpperCase()}`
     }
 
