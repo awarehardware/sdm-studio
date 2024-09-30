@@ -82,7 +82,7 @@ html, body {
     /* Textarea styling */
     #userInput {
       width: 100%;  /* Full width of the container */
-      height: 50%;  /* Adjust the height, you can modify this percentage */
+      height: 30%;  /* Adjust the height, you can modify this percentage */
       resize: none; /* Prevent resizing */
       padding: 10px;
       font-size: 13px;
@@ -94,7 +94,7 @@ html, body {
     /* Div for live render */
     #liveRenderDiv {
       width: 100%;  /* Full width */
-      height: 50%;  /* Adjust the height */
+      height: 70%;  /* Adjust the height */
       margin-top: 10px;
       padding: 10px;
       box-sizing: border-box;
