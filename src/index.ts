@@ -34,6 +34,9 @@ const liveRendering = () => {
     // Append title
     liveRenderDivElement.appendChild(screenplay.title.getRenderedHtml())
 
+    // Append authors
+    liveRenderDivElement.appendChild(screenplay.authors.getRenderedHtml())
+
     // Append the paragraph to the div
     for (let i = 0; i < screenplay.elements?.length; i++) {
         const element = screenplay.elements[i];

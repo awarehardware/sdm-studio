@@ -74,6 +74,9 @@ export async function generateDoc(screenplay: ScreenPlay) {
 
     // Render title
     section_children.push(...screenplay.title.getRenderedDocxParagraph());
+
+    // Render authors
+    section_children.push(...screenplay.authors.getRenderedDocxParagraph());
     
     // Render screenplay elements
     for (let i = 0; i < screenplay.elements.length; i++) {
