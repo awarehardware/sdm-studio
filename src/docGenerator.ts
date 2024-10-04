@@ -68,6 +68,11 @@ const GENERATED_DOCX_STYLES = {
     ]
 }
 
+function getDocTitle(screenplay: ScreenPlay): string {
+    const docTitle = screenplay.authors.content + " - " + screenplay.title.asString()
+    return docTitle
+}
+
 export async function generateDoc(screenplay: ScreenPlay) {
     // Get the text from the input field
     const section_children = [];
@@ -83,13 +88,11 @@ export async function generateDoc(screenplay: ScreenPlay) {
         section_children.push(...screenplay.elements[i].getRenderedDocxParagraph());
     }
 
-    const docTitle = screenplay.title.asString();
+    const docTitle = getDocTitle(screenplay);
 
     // The first argument is an ID you use to apply the style to paragraphs
     // The second argument is a human-friendly name to show in the UI
-    let doc = new Document({
-        creator: "",
-        title: docTitle,
+    let doc = new Document({ creator: "", title: docTitle,
         description: "",
         sections: [{
             children: section_children
