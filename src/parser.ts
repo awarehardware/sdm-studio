@@ -1,6 +1,7 @@
 import { Dialogue } from "./dialogue"
 import { Direction } from "./direction"
 import { Title } from "./title"
+import { Authors } from "./authors"
 import { ScreenPlay } from "./screenplay"
 
 /////
@@ -73,6 +74,18 @@ function parseTitleOrNull(line: string): Title | null {
     return null
 }
 
+const parseAuthorsOrNull = (line: string): Authors | null => {
+    // Another magic regex
+    const regex = /^[a]ut\w*\s*:\s*(.*)/i;
+
+    const match = line.match(regex);
+    if (match) {
+        return new Authors(match[1])
+    } else {
+        return null
+    }
+}
+
 ////////// Line parser
 
 const parseLine = (line: string): Dialogue | Direction => {
@@ -85,33 +98,41 @@ const parseLine = (line: string): Dialogue | Direction => {
     }
 };
 
+////////// Text parser
+
 export const parseText = (text: string): ScreenPlay => {
     // Divide input text in lines
     const splitted: string[] = text.split("\n");
 
     const result = new ScreenPlay()
 
-    let titleFound = false
-    let firstElementFound = false
     let indexElement = 0;
 
     for (let i = 0; i < splitted.length; i++) {
         const line = splitted[i];
-        
-        if (!indexElement) {
+
+        if (indexElement == 0) {
+            // If no screenplay element have been added yet
             // First try to find title
             const potentialTitle = parseTitleOrNull(line)
-            
+
             // Title found
-            if(potentialTitle) {
-                titleFound = true;
+            if (potentialTitle) {
                 result.title = potentialTitle;
+                continue
+            }
+
+            // Or try to find author
+            const potentialAuthor = parseAuthorsOrNull(line)
+
+            // Title found
+            if (potentialAuthor) {
+                result.authors = potentialAuthor;
                 continue
             }
         }
 
         const parsed = parseLine(line);
-        firstElementFound = true;
         result.elements[indexElement] = parsed;
         indexElement++;
     }
