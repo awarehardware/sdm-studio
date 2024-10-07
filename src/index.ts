@@ -31,6 +31,9 @@ const liveRendering = () => {
     // Set window title with screenplay title
     document.title = screenplay.title.asString()
 
+    // Append stage
+    liveRenderDivElement.appendChild(screenplay.stage.getRenderedHtml())
+
     // Append title
     liveRenderDivElement.appendChild(screenplay.title.getRenderedHtml())
 
