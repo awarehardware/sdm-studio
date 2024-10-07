@@ -77,12 +77,15 @@ export async function generateDoc(screenplay: ScreenPlay) {
     // Get the text from the input field
     const section_children = [];
 
+    // Render stage
+    section_children.push(...screenplay.stage.getRenderedDocxParagraph());
+
     // Render title
     section_children.push(...screenplay.title.getRenderedDocxParagraph());
 
     // Render authors
     section_children.push(...screenplay.authors.getRenderedDocxParagraph());
-    
+
     // Render screenplay elements
     for (let i = 0; i < screenplay.elements.length; i++) {
         section_children.push(...screenplay.elements[i].getRenderedDocxParagraph());

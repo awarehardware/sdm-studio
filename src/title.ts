@@ -14,13 +14,15 @@ export class Title {
     }
 
     getRenderedHtml(): HTMLElement {
-        const p = document.createElement("strong");
-        p.classList.add("title");
+        const paragraph = document.createElement("p");
+        paragraph.classList.add("title");
 
-        if (p) {
-            p.textContent += this.asString()
-        }
-        return p;
+        // Strong within paragraph
+        const strong = document.createElement("strong");
+        strong.textContent = this.asString()
+        paragraph.appendChild(strong)
+
+        return paragraph;
     }
 
     getRenderedDocxParagraph(): Array<Paragraph> {
@@ -29,6 +31,7 @@ export class Title {
                 children: [
                     new TextRun({
                         text: this.asString(),
+                        break: 1
                     }),
                 ],
                 style: "title"

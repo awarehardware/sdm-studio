@@ -2,6 +2,7 @@ import { Dialogue } from "./dialogue"
 import { Direction } from "./direction"
 import { Title } from "./title"
 import { Authors } from "./authors"
+import { Stage } from "./stage"
 import { ScreenPlay } from "./screenplay"
 
 /////
@@ -86,6 +87,21 @@ const parseAuthorsOrNull = (line: string): Authors | null => {
     }
 }
 
+const parseStageOrNull = (line: string): Stage | null => {
+    // Regex
+    const regex = /(\S*)\s*\/\s*(\S*)\s*-\s*(.*)/;
+    const match = line.match(regex)
+
+    if (match) {
+        let intOrExt = match[1]
+        let dayOrNight = match[2]
+        let place = match[3]
+        return new Stage(intOrExt, dayOrNight, place)
+    } else {
+        return null;
+    }
+}
+
 ////////// Line parser
 
 const parseLine = (line: string): Dialogue | Direction => {
@@ -122,12 +138,21 @@ export const parseText = (text: string): ScreenPlay => {
                 continue
             }
 
-            // Or try to find author
+            // Try to find author
             const potentialAuthor = parseAuthorsOrNull(line)
 
-            // Title found
+            // Author found
             if (potentialAuthor) {
                 result.authors = potentialAuthor;
+                continue
+            }
+
+            // Try to find stage
+            const potentialStage = parseStageOrNull(line)
+
+            // Stage found
+            if (potentialStage) {
+                result.stage = potentialStage;
                 continue
             }
         }
