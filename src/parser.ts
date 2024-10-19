@@ -31,27 +31,27 @@ function parseDialogueOrNull(line: string): Dialogue | null {
     let direction: string; // The optional direction (empty if not present)
     let text: string; // The spoken text
 
-    if (match) {
-        characterName = match[1]; // The character name
-        direction = match[2] || match[3] || ""; // The optional direction (either in parentheses or not)
-        text = match[4]; // The spoken text
-    } else {
+    if (!match) {
         // No match with regex
         return null;
     }
 
+    characterName = match[1].toUpperCase(); // The character name
+    direction = match[2] || match[3] || ""; // The optional direction (either in parentheses or not)
+    text = match[4]; // The spoken text
+
     // Check if name matches with characters name
     for (let i = 0; i < CHARACTERS.length; i++) {
         // Look for character
-        const characterUpper = CHARACTERS[i].toUpperCase();
+        const characterUpper = CHARACTERS[i];
 
         if (characterUpper.startsWith(characterName.toUpperCase())) {
-            // Character found
+            // Character found: expand to real character name
             const character = CHARACTERS[i];
             return new Dialogue(character, text, direction);
         }
     }
-    return null;
+    return new Dialogue(characterName, text, direction);
 }
 
 ////////// Title
