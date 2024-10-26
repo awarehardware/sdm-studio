@@ -22,10 +22,10 @@ const CHARACTERS: string[] = [
 ];
 
 function parseDialogueOrNull(line: string): Dialogue | null {
-    // Magic regex
-    const regex =
-        /^(\w+)\s*(?:[, ]\s*(?:\(([^)]+)\)|([a-zA-Zéèêà' ]+)))?\s*:\s*(.+)$/;
+    // Match "char, direction : text". Direction is optional
+    const regex = /\s*([^,]*[^\s])\s*(?:,\s*(.*[^\s])\s*)?:\s*(.+)\s*/;
     const match = line.match(regex);
+    console.log(match)
 
     let characterName: string; // The char
     let direction: string; // The optional direction (empty if not present)
@@ -36,9 +36,9 @@ function parseDialogueOrNull(line: string): Dialogue | null {
         return null;
     }
 
-    characterName = match[1].toUpperCase(); // The character name
-    direction = match[2] || match[3] || ""; // The optional direction (either in parentheses or not)
-    text = match[4]; // The spoken text
+    characterName = match[1].toUpperCase();
+    direction = match[2];
+    text = match[3];
 
     // Check if name matches with characters name
     for (let i = 0; i < CHARACTERS.length; i++) {
