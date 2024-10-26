@@ -23,7 +23,7 @@ export class Direction {
                 children: [
                     new TextRun({
                         text: this.content,
-                        break: 1
+                        break: 1,
                     }),
                 ],
                 style: "direction"
