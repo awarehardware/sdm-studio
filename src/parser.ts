@@ -4,30 +4,29 @@ import { Title } from "./title"
 import { Authors } from "./authors"
 import { Stage } from "./stage"
 import { ScreenPlay } from "./screenplay"
+import { Autonaming } from "./autonaming"
 
-/////
+function parsedDialogueSortcutedOrNull(line: string, autonaming: Autonaming): Dialogue | null {
+    // Match "- text"
+    const regex = /\s*-\s*(.*[^\s])\s*/;
+    const match = line.match(regex);
 
-const CHARACTERS: string[] = [
-    "EMMA",
-    "FABIEN",
-    "LILIANE",
-    "JOSE",
-    "RAYMOND",
-    "CAMILLE",
-    "PHILIPPE",
-    "LEO",
-    "LESLIE",
-    "AUDREY",
-    "SOFIANE"
-];
+    // No match
+    if (!match) {
+        return null
+    }
 
-function parseDialogueOrNull(line: string): Dialogue | null {
+    let character = autonaming.getDashGuess()
+    let text = match[1]
+    return new Dialogue(character, text, "")
+}
+
+function parseDialogueOrNull(line: string, autonaming: Autonaming): Dialogue | null {
     // Match "char, direction : text". Direction is optional
     const regex = /\s*([^,]*[^\s])\s*(?:,\s*(.*[^\s])\s*)?:\s*(.+)\s*/;
     const match = line.match(regex);
-    console.log(match)
 
-    let characterName: string; // The char
+    let character: string; // Character prefix or name
     let direction: string; // The optional direction (empty if not present)
     let text: string; // The spoken text
 
@@ -36,22 +35,20 @@ function parseDialogueOrNull(line: string): Dialogue | null {
         return null;
     }
 
-    characterName = match[1].toUpperCase();
+    character = match[1].toUpperCase();
     direction = match[2];
     text = match[3];
 
-    // Check if name matches with characters name
-    for (let i = 0; i < CHARACTERS.length; i++) {
-        // Look for character
-        const characterUpper = CHARACTERS[i];
-
-        if (characterUpper.startsWith(characterName.toUpperCase())) {
-            // Character found: expand to real character name
-            const character = CHARACTERS[i];
-            return new Dialogue(character, text, direction);
-        }
+    // Apply autonaming
+    if (character == '-') {
+        // Dash detected
+        character = autonaming.getDashGuess()
+    } else {
+        // Get matching prefix if exists
+        character = autonaming.getPrefixGuess(character) ?? character
     }
-    return new Dialogue(characterName, text, direction);
+
+    return new Dialogue(character, text, direction);
 }
 
 ////////// Title
@@ -104,12 +101,20 @@ const parseStageOrNull = (line: string): Stage | null => {
 
 ////////// Line parser
 
-const parseLine = (line: string): Dialogue | Direction => {
-    const dial = parseDialogueOrNull(line);
+const parseLine = (line: string, autonaming: Autonaming): Dialogue | Direction => {
+
+    // Check if dial is full dialogue
+    let dial = parseDialogueOrNull(line, autonaming);
+
+    // Check if dial is shortcuted dialogue
+    dial = dial ?? parsedDialogueSortcutedOrNull(line, autonaming)
 
     if (dial) {
+        // Update autonaming engine
+        autonaming.updateWithDialogue(dial)
         return dial;
     } else {
+        // Not a dial: return direction
         return new Direction(line);
     }
 };
@@ -121,7 +126,7 @@ export const parseText = (text: string): ScreenPlay => {
     const splitted: string[] = text.split("\n");
 
     const result = new ScreenPlay()
-
+    let autonaming = new Autonaming()
     let indexElement = 0;
 
     for (let i = 0; i < splitted.length; i++) {
@@ -135,6 +140,7 @@ export const parseText = (text: string): ScreenPlay => {
             // Title found
             if (potentialTitle) {
                 result.title = potentialTitle;
+                autonaming.updateWithCouple(potentialTitle.coupleLetter)
                 continue
             }
 
@@ -157,7 +163,7 @@ export const parseText = (text: string): ScreenPlay => {
             }
         }
 
-        const parsed = parseLine(line);
+        const parsed = parseLine(line, autonaming);
         result.elements[indexElement] = parsed;
         indexElement++;
     }
