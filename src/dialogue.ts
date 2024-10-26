@@ -7,8 +7,15 @@ export class Dialogue {
 
     constructor(character: string, text: string, direction: string) {
         this.character = character;
-        this.text = text;
+        this.text = this.capitalizeSentences(text);
         this.direction = direction;
+    }
+
+    capitalizeSentences(text: string): string {
+        return text
+            .split(/([.!?]\s+)/)  // Split by sentence-ending punctuation (., !, ? followed by space)
+            .map(sentence => sentence.charAt(0).toUpperCase() + sentence.slice(1))  // Capitalize the first letter of each sentence
+            .join('');  // Join the sentences back together
     }
 
     getRenderedHtml(): HTMLElement {
