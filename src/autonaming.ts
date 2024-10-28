@@ -9,28 +9,60 @@ const COUPLES: { [key: string]: string[] } = {
     'I': ['ALICE', 'SOFIANE']
 }
 
-const DEFAULT_COUPLE = 'D'
-
 export class Autonaming {
     poolCharacters: string[]
     usedCharacters: string[]
     lastCharacterIndex: number | null
+    titleSetCoupleId: string | null
+    inferredCoupleId: string | null
 
     constructor() {
-        // Potential characters, can be used or not
-        this.poolCharacters = COUPLES[DEFAULT_COUPLE]
         // Used characters
         this.usedCharacters = []
+        // Index of last character in usedCharacter
         this.lastCharacterIndex = null;
+        // No couple ID set yet 
+        this.titleSetCoupleId = null
+        // No inferred couple ID set yet
+        this.inferredCoupleId = null
+        // All characters from all couples can be used
+        this.poolCharacters = []
+        for (let id in COUPLES) {
+            let coupleChars = COUPLES[id]
+            for (let i = 0; i < coupleChars.length; i++) {
+                this.poolCharacters.push(coupleChars[i])
+            }
+        }
+    }
+
+    _getCoupleIdFromCharacter(character: string): string | null {
+        for (let id in COUPLES) {
+            let coupleChars = COUPLES[id]
+            if (coupleChars.includes(character)) {
+                return id
+            }
+        }
+        return null
     }
 
     updateWithDialogue(dialogue: Dialogue) {
+        if ((this.titleSetCoupleId == null) && (this.inferredCoupleId == null)) {
+            // Try to set couple ID
+            this.inferredCoupleId = this._getCoupleIdFromCharacter(dialogue.character)
+
+            // Populate pool character with inferred couple ID
+            if (this.inferredCoupleId != null) {
+                this.poolCharacters = COUPLES[this.inferredCoupleId]
+            }
+        }
+
+        // Check if dialogue character is already in used characters
         if (this.usedCharacters && !this.usedCharacters.includes(dialogue.character)) {
+            // Add dialogue character to used characters
             this.usedCharacters.push(dialogue.character)
         }
 
         this.lastCharacterIndex = this.usedCharacters.indexOf(dialogue.character)
-
     }
 
     updateWithCouple(coupleId: string) {
@@ -41,6 +73,8 @@ export class Autonaming {
             return
         }
 
+        this.titleSetCoupleId = coupleId
+        // Populate pool character with setup couple ID
         this.poolCharacters = COUPLES[coupleId]
     }
 
