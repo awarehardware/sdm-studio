@@ -8,8 +8,9 @@ import { Autonaming } from "./autonaming"
 
 function parsedDialogueSortcutedOrNull(line: string, autonaming: Autonaming): Dialogue | null {
     // Match "- text"
-    const regex = /\s*-\s*(.*[^\s])\s*/;
+    const regex = /$\s*-\s*(.*[^\s])\s*/;
     const match = line.match(regex);
+
 
     // No match
     if (!match) {
